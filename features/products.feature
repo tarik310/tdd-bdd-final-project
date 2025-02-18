@@ -5,11 +5,11 @@ Feature: The product store service back-end
 
 Background:
     Given the following products
-        | name       | description     | price   | available | category   |
-        | Hat        | A red fedora    | 59.95   | True      | CLOTHS     |
-        | Shoes      | Blue shoes      | 120.50  | False     | CLOTHS     |
-        | Big Mac    | 1/4 lb burger   | 5.99    | True      | FOOD       |
-        | Sheets     | Full bed sheets | 87.00   | True      | HOUSEWARES |
+        | name    | description     | price  | available | category   |
+        | Hat     | A red fedora    | 59.95  | True      | CLOTHS     |
+        | Shoes   | Blue shoes      | 120.50 | False     | CLOTHS     |
+        | Big Mac | 1/4 lb burger   | 5.99   | True      | FOOD       |
+        | Sheets  | Full bed sheets | 87.00  | True      | HOUSEWARES |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -38,3 +38,76 @@ Scenario: Create a Product
     And I should see "True" in the "Available" dropdown
     And I should see "Tools" in the "Category" dropdown
     And I should see "34.95" in the "Price" field
+
+Scenario: Read a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the "Name" field
+    And I should see "A red fedora" in the "Description" field
+    And I should see "True" in the "Available" dropdown
+    And I should see "CLOTHS" in the "Category" dropdown
+    And I should see "59.95" in the "Price" field
+
+Scenario: Update a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Shoes"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I set the "Name" to "Running Shoes"
+    And I set the "Description" to "Lightweight running shoes"
+    And I select "True" in the "Available" dropdown
+    And I select "CLOTHS" in the "Category" dropdown
+    And I set the "Price" to "130.75"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    And I should see "Running Shoes" in the "Name" field
+    And I should see "Lightweight running shoes" in the "Description" field
+    And I should see "True" in the "Available" dropdown
+    And I should see "CLOTHS" in the "Category" dropdown
+    And I should see "130.75" in the "Price" field
+
+Scenario: Delete a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Big Mac"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Success"
+    And I should not see "Big Mac" in the "Name" field
+
+Scenario: List all Products
+    When I visit the "Home Page"
+    And I press the "List All" button
+    Then I should see the message "Success"
+    And I should see at least "4" products listed
+
+Scenario: Search for Products by Category
+    When I visit the "Home Page"
+    And I select "FOOD" in the "Category" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see only products in the "FOOD" category
+
+Scenario: Search for Products by Availability
+    When I visit the "Home Page"
+    And I select "True" in the "Available" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see only products with availability "True"
+
+Scenario: Search for Products by Name
+    When I visit the "Home Page"
+    And I set the "Name" to "Sheets"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Sheets" in the "Name" field
